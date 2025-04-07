@@ -1,8 +1,4 @@
-<img src="assets/images/clickup_mcp_server_social_image.png" alt="ClickUp MCP Server" width="100%">
-
-![Total Supporters](https://img.shields.io/badge/🏆%20Total%20Supporters-3-gold)
-[![GitHub Stars](https://img.shields.io/github/stars/TaazKareem/clickup-mcp-server?style=flat&logo=github)](https://github.com/TaazKareem/clickup-mcp-server/stargazers)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg)](https://github.com/TaazKareem/clickup-mcp-server/graphs/commit-activity)
+# ClickUp MCP Server
 
 A Model Context Protocol (MCP) server for integrating ClickUp tasks with AI applications. This server allows AI agents to interact with ClickUp tasks, spaces, lists, and folders through a standardized protocol.
 
@@ -37,7 +33,7 @@ Add this entry to your client's MCP settings JSON file:
       "command": "npx",
       "args": [
         "-y",
-        "@taazkareem/clickup-mcp-server@latest"
+        "@jcleigh/clickup-mcp-server@main"
       ],
       "env": {
         "CLICKUP_API_KEY": "your-api-key",
@@ -50,7 +46,7 @@ Add this entry to your client's MCP settings JSON file:
 
 Or use this npx command:
 
-`npx -y @taazkareem/clickup-mcp-server@latest --env CLICKUP_API_KEY=your-api-key --env CLICKUP_TEAM_ID=your-team-id`
+`npx -y @jcleigh/clickup-mcp-server@main --env CLICKUP_API_KEY=your-api-key --env CLICKUP_TEAM_ID=your-team-id`
 
 ## Features
 
