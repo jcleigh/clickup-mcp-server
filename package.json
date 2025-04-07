@@ -1,6 +1,6 @@
 {
-  "name": "@taazkareem/clickup-mcp-server",
-  "version": "0.6.9",
+  "name": "clickup-mcp-server",
+  "version": "0.0.1",
   "description": "ClickUp MCP Server - Integrate ClickUp tasks with AI through Model Context Protocol",
   "type": "module",
   "main": "build/index.js",
@@ -44,16 +44,12 @@
     "task-organization",
     "project-organization"
   ],
-  "author": "Talib Kareem",
+  "author": "",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/taazkareem/clickup-mcp-server.git"
+    "url": "git+https://github.com/jcleigh/clickup-mcp-server.git"
   },
-  "bugs": {
-    "url": "https://github.com/taazkareem/clickup-mcp-server/issues"
-  },
-  "homepage": "https://github.com/taazkareem/clickup-mcp-server#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.6.0",
     "axios": "^1.6.7",

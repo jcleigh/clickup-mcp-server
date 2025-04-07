@@ -7,9 +7,6 @@
  * Re-exports specialized utilities from dedicated modules.
  */
 
-import { Logger } from '../logger.js';
-import { clickUpServices } from '../services/shared.js';
-
 // Re-export date utilities
 export { 
   getRelativeTimestamp,

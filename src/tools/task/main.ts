@@ -74,7 +74,7 @@ function createHandlerWrapper<T>(
   return async (parameters: any) => {
     try {
       const result = await handler(parameters);
-      return sponsorService.createResponse(formatResponse(result), true);
+      return sponsorService.createResponse(formatResponse(result));
     } catch (error) {
       return sponsorService.createErrorResponse(error, parameters);
     }
@@ -98,7 +98,7 @@ export const handleGetTasks = createHandlerWrapper(getTasksHandler, (tasks) => (
 export async function handleUpdateTask(parameters: any) {
   try {
     const result = await updateTaskHandler(taskService, parameters);
-    return sponsorService.createResponse(formatTaskData(result), true);
+    return sponsorService.createResponse(formatTaskData(result));
   } catch (error) {
     return sponsorService.createErrorResponse(error instanceof Error ? error.message : String(error));
   }

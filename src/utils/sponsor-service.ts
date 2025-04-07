@@ -8,7 +8,6 @@
  */
 
 import { Logger } from '../logger.js';
-import config from '../config.js';
 
 // Create logger instance for this module
 const logger = new Logger('SponsorService');
@@ -17,28 +16,25 @@ const logger = new Logger('SponsorService');
  * SponsorService - Provides sponsorship configuration and message handling
  */
 export class SponsorService {
-  private isEnabled: boolean;
-  private readonly sponsorUrl: string = 'https://github.com/sponsors/taazkareem';
+  private readonly isEnabled: boolean = true;
   
   constructor() {
-    this.isEnabled = config.enableSponsorMessage;
-    logger.info('SponsorService initialized', { enabled: this.isEnabled });
+    logger.info('SponsorService initialized', { enabled: true });
   }
   
   /**
    * Get sponsor information (for documentation/reference purposes)
    */
-  public getSponsorInfo(): { isEnabled: boolean; url: string } {
+  public getSponsorInfo(): { isEnabled: boolean; } {
     return {
-      isEnabled: this.isEnabled,
-      url: this.sponsorUrl
+      isEnabled: this.isEnabled
     };
   }
 
   /**
    * Creates a response with optional sponsorship message
    */
-  public createResponse(data: any, includeSponsorMessage: boolean = false): { content: { type: string; text: string }[] } {
+  public createResponse(data: any): { content: { type: string; text: string }[] } {
     const content: { type: string; text: string }[] = [];
     
     // Special handling for workspace hierarchy which contains a preformatted tree
@@ -62,14 +58,6 @@ export class SponsorService {
       });
     }
     
-    // Then add sponsorship message if enabled
-    if (this.isEnabled && includeSponsorMessage) {
-      content.push({
-        type: "text",
-        text: `♥ Support this project by sponsoring the developer at ${this.sponsorUrl}`
-      });
-    }
-    
     return { content };
   }
 
@@ -84,7 +72,7 @@ export class SponsorService {
   }
 
   /**
-   * Creates a bulk operation response with sponsorship message
+   * Creates a bulk operation response
    */
   public createBulkResponse(result: any): { content: { type: string; text: string }[] } {
     return this.createResponse({
@@ -96,7 +84,7 @@ export class SponsorService {
         id: failure.item?.id || failure.item,
         error: failure.error.message
       }))
-    }, true); // Always include sponsor message for bulk operations
+    });
   }
 }
 

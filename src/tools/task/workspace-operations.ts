@@ -8,8 +8,6 @@
  * filtering tasks across the entire workspace with tag-based filtering.
  */
 
-import { TaskFilters } from '../../services/clickup/types.js';
-
 /**
  * Tool definition for getting workspace tasks
  */

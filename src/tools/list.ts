@@ -248,7 +248,7 @@ export async function handleCreateList(parameters: any) {
       },
       url: `https://app.clickup.com/${config.clickupTeamId}/v/l/${newList.id}`,
       message: `List "${name}" created successfully`
-    }, true);
+    });
   } catch (error: any) {
     return sponsorService.createErrorResponse(`Failed to create list: ${error.message}`);
   }
@@ -325,7 +325,7 @@ export async function handleCreateListInFolder(parameters: any) {
       },
       url: `https://app.clickup.com/${config.clickupTeamId}/v/l/${newList.id}`,
       message: `List "${name}" created successfully in folder "${newList.folder.name}"`
-    }, true);
+    });
   } catch (error: any) {
     return sponsorService.createErrorResponse(`Failed to create list in folder: ${error.message}`);
   }
@@ -366,7 +366,7 @@ export async function handleGetList(parameters: any) {
         name: list.space.name
       },
       url: `https://app.clickup.com/${config.clickupTeamId}/v/l/${list.id}`
-    }, true);
+    });
   } catch (error: any) {
     return sponsorService.createErrorResponse(`Failed to retrieve list: ${error.message}`);
   }
@@ -419,7 +419,7 @@ export async function handleUpdateList(parameters: any) {
       },
       url: `https://app.clickup.com/${config.clickupTeamId}/v/l/${updatedList.id}`,
       message: `List "${updatedList.name}" updated successfully`
-    }, true);
+    });
   } catch (error: any) {
     return sponsorService.createErrorResponse(`Failed to update list: ${error.message}`);
   }
@@ -458,7 +458,7 @@ export async function handleDeleteList(parameters: any) {
     return sponsorService.createResponse({
       success: true,
       message: `List "${listName || targetListId}" deleted successfully`
-    }, true);
+    });
   } catch (error: any) {
     return sponsorService.createErrorResponse(`Failed to delete list: ${error.message}`);
   }

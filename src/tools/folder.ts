@@ -194,7 +194,7 @@ export async function handleCreateFolder(parameters: any) {
         name: newFolder.space.name
       },
       message: `Folder "${newFolder.name}" created successfully`
-    }, true);
+    });
   } catch (error: any) {
     return sponsorService.createErrorResponse(`Failed to create folder: ${error.message}`);
   }
@@ -248,7 +248,7 @@ export async function handleGetFolder(parameters: any) {
         id: folder.space.id,
         name: folder.space.name
       }
-    }, true);
+    });
   } catch (error: any) {
     return sponsorService.createErrorResponse(`Failed to retrieve folder: ${error.message}`);
   }
@@ -313,7 +313,7 @@ export async function handleUpdateFolder(parameters: any) {
         name: updatedFolder.space.name
       },
       message: `Folder "${updatedFolder.name}" updated successfully`
-    }, true);
+    });
   } catch (error: any) {
     return sponsorService.createErrorResponse(`Failed to update folder: ${error.message}`);
   }
@@ -367,7 +367,7 @@ export async function handleDeleteFolder(parameters: any) {
     return sponsorService.createResponse({
       success: true,
       message: `Folder "${folderName || targetFolderId}" deleted successfully`
-    }, true);
+    });
   } catch (error: any) {
     return sponsorService.createErrorResponse(`Failed to delete folder: ${error.message}`);
   }

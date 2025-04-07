@@ -44,7 +44,7 @@ export async function handleGetWorkspaceHierarchy() {
     const treeOutput = formatTreeOutput(hierarchy);
     
     // Use sponsor service to create the response with optional sponsor message
-    return sponsorService.createResponse({ hierarchy: treeOutput }, true);
+    return sponsorService.createResponse({ hierarchy: treeOutput });
   } catch (error: any) {
     return sponsorService.createErrorResponse(`Error getting workspace hierarchy: ${error.message}`);
   }

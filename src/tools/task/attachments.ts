@@ -416,7 +416,7 @@ function createHandlerWrapper<T>(
   return async (parameters: any) => {
     try {
       const result = await handler(parameters);
-      return sponsorService.createResponse(formatResponse(result), true);
+      return sponsorService.createResponse(formatResponse(result));
     } catch (error) {
       return sponsorService.createErrorResponse(error, parameters);
     }

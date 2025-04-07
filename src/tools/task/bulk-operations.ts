@@ -8,20 +8,8 @@
  * updating, moving, and deleting multiple tasks at once.
  */
 
-import { TaskPriority } from '../../services/clickup/types.js';
 import { clickUpServices } from '../../services/shared.js';
 import { BulkService } from '../../services/clickup/bulk.js';
-import { parseDueDate } from '../utils.js';
-import { 
-  validateBulkTasks, 
-  parseBulkOptions,
-  validateTaskIdentification,
-  validateListIdentification,
-  validateTaskUpdateData,
-  resolveListIdWithValidation
-} from './utilities.js';
-import { getTaskId } from './handlers.js';
-import { BatchProcessingOptions } from '../../utils/concurrency-utils.js';
 
 // Initialize services
 const { task: taskService } = clickUpServices;

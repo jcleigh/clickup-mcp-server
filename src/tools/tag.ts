@@ -285,7 +285,7 @@ function createHandlerWrapper<T>(
       const formattedResult = formatResponse(result);
       
       // Use the sponsor service to create the formatted response
-      return sponsorService.createResponse(formattedResult, true);
+      return sponsorService.createResponse(formattedResult);
     } catch (error: any) {
       // Log the error
       logger.error('Error in handler', { error: error.message, code: error.code });

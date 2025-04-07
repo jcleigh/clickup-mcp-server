@@ -9,22 +9,7 @@
  * task details and comments.
  */
 
-import { 
-  ClickUpComment,
-  ClickUpTask, 
-  CreateTaskData,
-  TaskPriority, 
-  UpdateTaskData
-} from '../../services/clickup/types.js';
-import { parseDueDate } from '../utils.js';
 import { clickUpServices } from '../../services/shared.js';
-import { 
-  formatTaskData,
-  resolveListIdWithValidation,
-  validateTaskUpdateData,
-  validateTaskIdentification,
-  validateListIdentification
-} from './utilities.js';
 
 // Use shared services instance
 const { task: taskService } = clickUpServices;

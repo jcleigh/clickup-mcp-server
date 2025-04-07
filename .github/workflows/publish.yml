@@ -20,56 +20,59 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # This ensures all history is fetched for proper versioning
+      - run: echo "This is a placeholder for the build and publish steps."
+
+      # Uncomment the following lines to enable the actual build and publish process
+      # - uses: actions/checkout@v3
+      #   with:
+      #     fetch-depth: 0 # This ensures all history is fetched for proper versioning
       
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          registry-url: 'https://registry.npmjs.org'
+      # - uses: actions/setup-node@v3
+      #   with:
+      #     node-version: '18'
+      #     registry-url: 'https://registry.npmjs.org'
       
-      - name: Install dependencies
-        run: npm ci
+      # - name: Install dependencies
+      #   run: npm ci
       
-      - name: Setup Git
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+      # - name: Setup Git
+      #   run: |
+      #     git config --global user.name "GitHub Actions"
+      #     git config --global user.email "actions@github.com"
       
-      - name: Get current version
-        id: package_version
-        run: echo "current_version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+      # - name: Get current version
+      #   id: package_version
+      #   run: echo "current_version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
       
-      - name: Calculate new version
-        id: new_version
-        run: |
-          if [ "${{ github.event.inputs.version_increment }}" = "patch" ]; then
-            npm --no-git-tag-version version patch
-          elif [ "${{ github.event.inputs.version_increment }}" = "minor" ]; then
-            npm --no-git-tag-version version minor
-          elif [ "${{ github.event.inputs.version_increment }}" = "major" ]; then
-            npm --no-git-tag-version version major
-          fi
-          echo "new_version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+      # - name: Calculate new version
+      #   id: new_version
+      #   run: |
+      #     if [ "${{ github.event.inputs.version_increment }}" = "patch" ]; then
+      #       npm --no-git-tag-version version patch
+      #     elif [ "${{ github.event.inputs.version_increment }}" = "minor" ]; then
+      #       npm --no-git-tag-version version minor
+      #     elif [ "${{ github.event.inputs.version_increment }}" = "major" ]; then
+      #       npm --no-git-tag-version version major
+      #     fi
+      #     echo "new_version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
       
-      - name: Update server.ts version
-        run: |
-          sed -i "s/version: \"${{ steps.package_version.outputs.current_version }}\"/version: \"${{ steps.new_version.outputs.new_version }}\"/g" src/server.ts
+      # - name: Update server.ts version
+      #   run: |
+      #     sed -i "s/version: \"${{ steps.package_version.outputs.current_version }}\"/version: \"${{ steps.new_version.outputs.new_version }}\"/g" src/server.ts
       
-      - name: Commit all version changes
-        run: |
-          git add package.json package-lock.json src/server.ts
-          git commit -m "Bump version to ${{ steps.new_version.outputs.new_version }} [skip ci]"
-          git tag -a v${{ steps.new_version.outputs.new_version }} -m "Version ${{ steps.new_version.outputs.new_version }}"
+      # - name: Commit all version changes
+      #   run: |
+      #     git add package.json package-lock.json src/server.ts
+      #     git commit -m "Bump version to ${{ steps.new_version.outputs.new_version }} [skip ci]"
+      #     git tag -a v${{ steps.new_version.outputs.new_version }} -m "Version ${{ steps.new_version.outputs.new_version }}"
       
-      - name: Build
-        run: npm run build
+      # - name: Build
+      #   run: npm run build
       
-      - name: Publish to NPM
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - name: Publish to NPM
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
-      - name: Push changes
-        run: git push --follow-tags 
+      # - name: Push changes
+      #   run: git push --follow-tags 

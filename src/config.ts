@@ -51,7 +51,6 @@ export const parseLogLevel = (levelStr: string | undefined): LogLevel => {
 interface Config {
   clickupApiKey: string;
   clickupTeamId: string;
-  enableSponsorMessage: boolean;
   logLevel: LogLevel;
 }
 
@@ -59,7 +58,6 @@ interface Config {
 const configuration: Config = {
   clickupApiKey: envArgs.clickupApiKey || process.env.CLICKUP_API_KEY || '',
   clickupTeamId: envArgs.clickupTeamId || process.env.CLICKUP_TEAM_ID || '',
-  enableSponsorMessage: process.env.ENABLE_SPONSOR_MESSAGE !== 'false',
   logLevel: parseLogLevel(envArgs.logLevel || process.env.LOG_LEVEL)
 };
 

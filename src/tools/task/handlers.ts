@@ -8,10 +8,9 @@
  * and bulk operations. These handlers are used by the tool definitions.
  */
 
-import { ClickUpComment, ClickUpTask, TaskPriority, UpdateTaskData, TaskFilters, toTaskPriority, CreateTaskData } from '../../services/clickup/types.js';
+import { ClickUpTask, UpdateTaskData, TaskFilters, toTaskPriority, CreateTaskData } from '../../services/clickup/types.js';
 import { clickUpServices } from '../../services/shared.js';
 import { BulkService } from '../../services/clickup/bulk.js';
-import { BatchResult } from '../../utils/concurrency-utils.js';
 import { parseDueDate } from '../utils.js';
 import { 
   validateTaskIdentification, 
@@ -20,11 +19,9 @@ import {
   validateBulkTasks,
   parseBulkOptions,
   resolveListIdWithValidation,
-  formatTaskData
 } from './utilities.js';
 import { TaskService } from '../../services/clickup/task/task-service.js';
 import { ExtendedTaskFilters } from '../../services/clickup/types.js';
-import { findListIDByName } from '../list.js';
 import { workspaceService } from '../../services/shared.js';
 import { isNameMatch } from '../../utils/resolver-utils.js';
 import { Logger } from '../../logger.js';

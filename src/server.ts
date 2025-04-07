@@ -12,8 +12,6 @@ import {
   GetPromptRequestSchema,
   ListResourcesRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { createClickUpServices } from "./services/clickup/index.js";
-import config from "./config.js";
 import { workspaceHierarchyTool, handleGetWorkspaceHierarchy } from "./tools/workspace.js";
 import {
   createTaskTool,
