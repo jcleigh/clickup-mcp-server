@@ -9,13 +9,10 @@
  * and in folders.
  */
 
-import { 
-  CreateListData, 
-  ClickUpList
-} from '../services/clickup/types.js';
+import { CreateListData } from '../services/clickup/types.js';
 import { listService, workspaceService } from '../services/shared.js';
 import config from '../config.js';
-import { sponsorService } from '../utils/sponsor-service.js';
+import { responseUtils } from '../utils/response-utils.js';
 
 /**
  * Tool definition for creating a list directly in a space
@@ -162,28 +159,6 @@ export const updateListTool = {
 };
 
 /**
- * Tool definition for deleting a list
- */
-export const deleteListTool = {
-  name: "delete_list",
-  description: `PERMANENTLY deletes a ClickUp list and all its tasks. Use listId (preferred/safest) or listName. WARNING: Cannot be undone, all tasks will be deleted, listName risky if not unique.`,
-  inputSchema: {
-    type: "object",
-    properties: {
-      listId: {
-        type: "string",
-        description: "ID of the list to delete. Use this instead of listName if you have the ID."
-      },
-      listName: {
-        type: "string",
-        description: "Name of the list to delete. May be ambiguous if multiple lists have the same name."
-      }
-    },
-    required: []
-  }
-};
-
-/**
  * Helper function to find a list ID by name
  * Uses the ClickUp service's global list search functionality
  */
@@ -238,7 +213,7 @@ export async function handleCreateList(parameters: any) {
     // Create the list
     const newList = await listService.createList(targetSpaceId, listData);
     
-    return sponsorService.createResponse({
+    return responseUtils.createResponse({
       id: newList.id,
       name: newList.name,
       content: newList.content,
@@ -250,7 +225,7 @@ export async function handleCreateList(parameters: any) {
       message: `List "${name}" created successfully`
     });
   } catch (error: any) {
-    return sponsorService.createErrorResponse(`Failed to create list: ${error.message}`);
+    return responseUtils.createErrorResponse(`Failed to create list: ${error.message}`);
   }
 }
 
@@ -311,7 +286,7 @@ export async function handleCreateListInFolder(parameters: any) {
     // Create the list in the folder
     const newList = await listService.createListInFolder(targetFolderId, listData);
     
-    return sponsorService.createResponse({
+    return responseUtils.createResponse({
       id: newList.id,
       name: newList.name,
       content: newList.content,
@@ -327,7 +302,7 @@ export async function handleCreateListInFolder(parameters: any) {
       message: `List "${name}" created successfully in folder "${newList.folder.name}"`
     });
   } catch (error: any) {
-    return sponsorService.createErrorResponse(`Failed to create list in folder: ${error.message}`);
+    return responseUtils.createErrorResponse(`Failed to create list in folder: ${error.message}`);
   }
 }
 
@@ -357,7 +332,7 @@ export async function handleGetList(parameters: any) {
     // Get the list
     const list = await listService.getList(targetListId);
     
-    return sponsorService.createResponse({
+    return responseUtils.createResponse({
       id: list.id,
       name: list.name,
       content: list.content,
@@ -368,7 +343,7 @@ export async function handleGetList(parameters: any) {
       url: `https://app.clickup.com/${config.clickupTeamId}/v/l/${list.id}`
     });
   } catch (error: any) {
-    return sponsorService.createErrorResponse(`Failed to retrieve list: ${error.message}`);
+    return responseUtils.createErrorResponse(`Failed to retrieve list: ${error.message}`);
   }
 }
 
@@ -409,7 +384,7 @@ export async function handleUpdateList(parameters: any) {
     // Update the list
     const updatedList = await listService.updateList(targetListId, updateData);
     
-    return sponsorService.createResponse({
+    return responseUtils.createResponse({
       id: updatedList.id,
       name: updatedList.name,
       content: updatedList.content,
@@ -421,45 +396,6 @@ export async function handleUpdateList(parameters: any) {
       message: `List "${updatedList.name}" updated successfully`
     });
   } catch (error: any) {
-    return sponsorService.createErrorResponse(`Failed to update list: ${error.message}`);
+    return responseUtils.createErrorResponse(`Failed to update list: ${error.message}`);
   }
 }
-
-/**
- * Handler for the delete_list tool
- * Permanently removes a list from the workspace
- */
-export async function handleDeleteList(parameters: any) {
-  const { listId, listName } = parameters;
-  
-  let targetListId = listId;
-  
-  // If no listId provided but listName is, look up the list ID
-  if (!targetListId && listName) {
-    const listResult = await findListIDByName(workspaceService, listName);
-    if (!listResult) {
-      throw new Error(`List "${listName}" not found`);
-    }
-    targetListId = listResult.id;
-  }
-  
-  if (!targetListId) {
-    throw new Error("Either listId or listName must be provided");
-  }
-
-  try {
-    // Get list details before deletion for confirmation message
-    const list = await listService.getList(targetListId);
-    const listName = list.name;
-    
-    // Delete the list
-    await listService.deleteList(targetListId);
-    
-    return sponsorService.createResponse({
-      success: true,
-      message: `List "${listName || targetListId}" deleted successfully`
-    });
-  } catch (error: any) {
-    return sponsorService.createErrorResponse(`Failed to delete list: ${error.message}`);
-  }
-} 

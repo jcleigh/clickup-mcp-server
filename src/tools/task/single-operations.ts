@@ -435,28 +435,3 @@ export const createTaskCommentTool = {
     required: ["commentText"]
   }
 };
-
-/**
- * Tool definition for deleting a task
- */
-export const deleteTaskTool = {
-  name: "delete_task",
-  description: `PERMANENTLY deletes task. Use taskId (preferred/safest) or taskName + optional listName. WARNING: Cannot be undone. Using taskName without listName may match multiple tasks.`,
-  inputSchema: {
-    type: "object",
-    properties: {
-      taskId: {
-        type: "string",
-        description: "ID of task to delete (preferred). Works with both regular task IDs (9 characters) and custom IDs with uppercase prefixes (like 'DEV-1234')."
-      },
-      taskName: {
-        type: "string",
-        description: "Name of task to delete. The tool will search for tasks with this name across all lists unless listName is specified."
-      },
-      listName: {
-        type: "string",
-        description: "Optional: Name of list containing the task. Providing this narrows the search to a specific list, improving performance and reducing ambiguity."
-      }
-    }
-  }
-}; 

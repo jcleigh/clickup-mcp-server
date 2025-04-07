@@ -6,14 +6,14 @@
  * 
  * Provides tools for managing tags in ClickUp:
  * - Get space tags
- * - Create, update, delete space tags
+ * - Create, update space tags
  * - Add/remove tags to/from tasks
  */
 
 import { ErrorCode, ServiceResponse } from '../services/clickup/base.js';
 import { clickUpServices } from '../services/shared.js';
 import { Logger } from '../logger.js';
-import { sponsorService } from '../utils/sponsor-service.js';
+import { responseUtils } from '../utils/response-utils.js';
 import { ClickUpTag } from '../services/clickup/types.js';
 import { processColorCommand } from '../utils/color-processor.js';
 import { validateTaskIdentification } from './task/utilities.js';
@@ -158,44 +158,6 @@ Notes:
 };
 
 /**
- * Tool definition for deleting a tag in a space
- */
-export const deleteSpaceTagTool = {
-  name: "delete_space_tag",
-  description: `Purpose: Delete a tag from a ClickUp space.
-
-Valid Usage:
-1. Provide spaceId (preferred if available)
-2. Provide spaceName (will be resolved to a space ID)
-
-Requirements:
-- tagName: REQUIRED
-- EITHER spaceId OR spaceName: REQUIRED
-
-Warning:
-- This will remove the tag from all tasks in the space
-- This action cannot be undone`,
-  inputSchema: {
-    type: "object",
-    properties: {
-      spaceId: {
-        type: "string",
-        description: "ID of the space containing the tag. Use this instead of spaceName if you have the ID."
-      },
-      spaceName: {
-        type: "string",
-        description: "Name of the space containing the tag. Only use if you don't have spaceId."
-      },
-      tagName: {
-        type: "string",
-        description: "Name of the tag to delete."
-      }
-    },
-    required: ["tagName"]
-  }
-};
-
-/**
  * Tool definition for adding a tag to a task
  */
 export const addTagToTaskTool = {
@@ -284,14 +246,14 @@ function createHandlerWrapper<T>(
       // Format the result for response
       const formattedResult = formatResponse(result);
       
-      // Use the sponsor service to create the formatted response
-      return sponsorService.createResponse(formattedResult);
+      // Use the response util to create the formatted response
+      return responseUtils.createResponse(formattedResult);
     } catch (error: any) {
       // Log the error
       logger.error('Error in handler', { error: error.message, code: error.code });
       
-      // Format and return the error using sponsor service
-      return sponsorService.createErrorResponse(error, params);
+      // Format and return the error using response util
+      return responseUtils.createErrorResponse(error, params);
     }
   };
 }
@@ -320,14 +282,6 @@ export const handleCreateSpaceTag = createHandlerWrapper(createSpaceTag);
  * Wrapper for updateSpaceTag handler
  */
 export const handleUpdateSpaceTag = createHandlerWrapper(updateSpaceTag);
-
-/**
- * Wrapper for deleteSpaceTag handler
- */
-export const handleDeleteSpaceTag = createHandlerWrapper(deleteSpaceTag, () => ({
-  success: true,
-  message: "Tag deleted successfully"
-}));
 
 /**
  * Wrapper for addTagToTask handler
@@ -362,7 +316,6 @@ export const tagTools = [
   { definition: getSpaceTagsTool, handler: handleGetSpaceTags },
   { definition: createSpaceTagTool, handler: handleCreateSpaceTag },
   { definition: updateSpaceTagTool, handler: handleUpdateSpaceTag },
-  { definition: deleteSpaceTagTool, handler: handleDeleteSpaceTag },
   { definition: addTagToTaskTool, handler: handleAddTagToTask },
   { definition: removeTagFromTaskTool, handler: handleRemoveTagFromTask }
 ];
@@ -655,96 +608,6 @@ export async function updateSpaceTag(params: {
       success: false,
       error: {
         message: error.message || 'Failed to update space tag',
-        code: error.code,
-        details: error.data
-      }
-    };
-  }
-}
-
-/**
- * Delete a tag from a space
- * @param params - Space identifier and tag name
- * @returns Success status
- */
-export async function deleteSpaceTag(params: {
-  spaceId?: string;
-  spaceName?: string;
-  tagName: string;
-}) {
-  const { spaceId, spaceName, tagName } = params;
-  
-  if (!tagName) {
-    logger.error('deleteSpaceTag called without tagName');
-    return {
-      success: false,
-      error: {
-        message: 'tagName is required'
-      }
-    };
-  }
-  
-  if (!spaceId && !spaceName) {
-    logger.error('deleteSpaceTag called without space identifier');
-    return {
-      success: false,
-      error: {
-        message: 'Either spaceId or spaceName is required'
-      }
-    };
-  }
-
-  logger.info('Deleting tag from space', { spaceId, spaceName, tagName });
-  
-  try {
-    // If spaceName is provided, we need to resolve it to an ID
-    let resolvedSpaceId = spaceId;
-    if (!resolvedSpaceId && spaceName) {
-      logger.debug(`Resolving space name: ${spaceName}`);
-      
-      const spaces = await clickUpServices.workspace.getSpaces();
-      
-      const space = spaces.find(s => 
-        s.name.toLowerCase() === spaceName.toLowerCase()
-      );
-      
-      if (!space) {
-        logger.error(`Space not found: ${spaceName}`);
-        return {
-          success: false,
-          error: {
-            message: `Space not found: ${spaceName}`
-          }
-        };
-      }
-      
-      resolvedSpaceId = space.id;
-    }
-    
-    // Delete tag from the space
-    const tagResponse = await clickUpServices.tag.deleteSpaceTag(resolvedSpaceId, tagName);
-    
-    if (!tagResponse.success) {
-      logger.error('Failed to delete space tag', tagResponse.error);
-      return {
-        success: false,
-        error: tagResponse.error || {
-          message: 'Failed to delete space tag'
-        }
-      };
-    }
-    
-    logger.info(`Successfully deleted tag: ${tagName}`);
-    
-    return {
-      success: true
-    };
-  } catch (error) {
-    logger.error('Error in deleteSpaceTag', error);
-    return {
-      success: false,
-      error: {
-        message: error.message || 'Failed to delete space tag',
         code: error.code,
         details: error.data
       }

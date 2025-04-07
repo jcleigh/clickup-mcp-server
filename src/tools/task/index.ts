@@ -18,7 +18,6 @@ export {
   updateTaskTool,
   moveTaskTool,
   duplicateTaskTool,
-  deleteTaskTool,
   getTaskCommentsTool,
   createTaskCommentTool
 } from './single-operations.js';
@@ -28,7 +27,6 @@ export {
   createBulkTasksTool,
   updateBulkTasksTool,
   moveBulkTasksTool,
-  deleteBulkTasksTool
 } from './bulk-operations.js';
 
 // Re-export workspace task operation tools
@@ -51,7 +49,6 @@ export {
   updateTaskHandler,
   moveTaskHandler,
   duplicateTaskHandler,
-  deleteTaskHandler,
   getTaskCommentsHandler,
   createTaskCommentHandler,
   
@@ -59,7 +56,6 @@ export {
   createBulkTasksHandler,
   updateBulkTasksHandler,
   moveBulkTasksHandler,
-  deleteBulkTasksHandler,
   
   // Team task operation handlers
   getWorkspaceTasksHandler

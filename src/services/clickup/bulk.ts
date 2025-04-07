@@ -219,31 +219,4 @@ export class BulkService {
       throw error;
     }
   }
-
-  /**
-   * Delete multiple tasks
-   * @param tasks Array of tasks to delete (each with taskId or taskName + listName)
-   * @param options Batch processing options
-   * @returns Results containing successful and failed deletions
-   */
-  async deleteTasks(
-    tasks: { taskId?: string; taskName?: string; listName?: string; customTaskId?: string }[],
-    options?: BatchProcessingOptions
-  ): Promise<BatchResult<void>> {
-    logger.info('Starting bulk delete operation', { taskCount: tasks.length });
-    
-    try {
-      return await processBatch(
-        tasks,
-        async (task) => {
-          const resolvedTaskId = await this.resolveTaskId(task);
-          await this.taskService.deleteTask(resolvedTaskId);
-        },
-        options
-      );
-    } catch (error) {
-      logger.error('Bulk delete operation failed', error);
-      throw error;
-    }
-  }
 }

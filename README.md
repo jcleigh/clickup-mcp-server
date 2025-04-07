@@ -2,27 +2,19 @@
 
 A Model Context Protocol (MCP) server for integrating ClickUp tasks with AI applications. This server allows AI agents to interact with ClickUp tasks, spaces, lists, and folders through a standardized protocol.
 
-> 🚧 **Status Update:** Rolling out v0.6.9 will add Global Task Lookup with smart disambiguation, Start Date Support for tasks with natural language expressions, Complete Tag Support including natural language tag color commands, Subtasks Support, Custom ID Support, and Logging Fixes
-
 ## Setup
 
 1. Get your credentials:
    - ClickUp API key from [ClickUp Settings](https://app.clickup.com/settings/apps)
    - Team ID from your ClickUp workspace URL
-2. Choose either hosted installation (sends webhooks) or NPX installation (downloads to local path and installs dependencies)
+2. NPX installation (downloads to local path and installs dependencies)
 3. Use natural language to manage your workspace!
-
-## Smithery Installation (Quick Start)
-
-[![smithery badge](https://smithery.ai/badge/@taazkareem/clickup-mcp-server)](https://smithery.ai/server/@TaazKareem/clickup-mcp-server)
-
-The server is hosted on [Smithery](https://smithery.ai/server/@taazkareem/clickup-mcp-server). There, you can preview the available tools or copy the commands to run on your specific client app. 
 
 ## NPX Installation
 
-[![NPM Version](https://img.shields.io/npm/v/@taazkareem/clickup-mcp-server.svg?style=flat&logo=npm)](https://www.npmjs.com/package/@taazkareem/clickup-mcp-server)
-[![Dependency Status](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen)](https://github.com/TaazKareem/clickup-mcp-server/blob/main/package.json)
-[![NPM Downloads](https://img.shields.io/npm/dm/@taazkareem/clickup-mcp-server.svg?style=flat&logo=npm)](https://npmcharts.com/compare/@taazkareem/clickup-mcp-server?minimal=true)
+[![NPM Version](https://img.shields.io/npm/v/@jcleigh/clickup-mcp-server.svg?style=flat&logo=npm)](https://www.npmjs.com/package/@jcleigh/clickup-mcp-server)
+[![Dependency Status](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen)](https://github.com/jcleigh/clickup-mcp-server/blob/main/package.json)
+[![NPM Downloads](https://img.shields.io/npm/dm/@jcleigh/clickup-mcp-server.svg?style=flat&logo=npm)](https://npmcharts.com/compare/@jcleigh/clickup-mcp-server?minimal=true)
 
 Add this entry to your client's MCP settings JSON file:
 
@@ -33,7 +25,7 @@ Add this entry to your client's MCP settings JSON file:
       "command": "npx",
       "args": [
         "-y",
-        "@jcleigh/clickup-mcp-server@main"
+        "@jcleigh/clickup-mcp-server@latest"
       ],
       "env": {
         "CLICKUP_API_KEY": "your-api-key",
@@ -46,13 +38,13 @@ Add this entry to your client's MCP settings JSON file:
 
 Or use this npx command:
 
-`npx -y @jcleigh/clickup-mcp-server@main --env CLICKUP_API_KEY=your-api-key --env CLICKUP_TEAM_ID=your-team-id`
+`npx -y @jcleigh/clickup-mcp-server@latest --env CLICKUP_API_KEY=your-api-key --env CLICKUP_TEAM_ID=your-team-id`
 
 ## Features
 
 | 📝 Task Management | 🏷️ Tag Management |
 |----------------------------|----------------------------|
-| • Create, update, and delete tasks<br>• Move and duplicate tasks anywhere<br>• Support for single and bulk operations<br>• Set start/due dates with natural language<br>• Create and manage subtasks<br>• Add comments and attachments | • Create, update, and delete space tags<br>• Add and remove tags from tasks<br>• Use natural language color commands<br>• Automatic contrasting foreground colors<br>• View all space tags<br>• Tag-based task organization across workspace |
+| • Create and update tasks<br>• Move and duplicate tasks anywhere<br>• Support for single and bulk operations<br>• Set start/due dates with natural language<br>• Create and manage subtasks<br>• Add comments and attachments | • Create and update space tags<br>• Add and remove tags from tasks<br>• Use natural language color commands<br>• Automatic contrasting foreground colors<br>• View all space tags<br>• Tag-based task organization across workspace |
 | 🌳 **Workspace Organization** | ⚡ **Integration Features** |
 | • Navigate spaces, folders, and lists<br>• Create and manage folders<br>• Organize lists within spaces<br>• Create lists in folders<br>• View workspace hierarchy<br>• Efficient path navigation | • Global name or ID-based lookups<br>• Case-insensitive matching<br>• Markdown formatting support<br>• Built-in rate limiting<br>• Error handling and validation<br>• Comprehensive API coverage |
 
@@ -71,8 +63,6 @@ Or use this npx command:
 | [get_task_comments](docs/api-reference.md#task-management) | Get comments on a task | `taskId`/`taskName` |
 | [create_task_comment](docs/api-reference.md#task-management) | Add a comment to a task | `commentText`, (`taskId`/(`taskName`+`listName`)) |
 | [attach_task_file](docs/api-reference.md#task-management) | Attach file to a task | `taskId`/`taskName`, (`file_data` or `file_url`) |
-| [delete_task](docs/api-reference.md#task-management) | Remove task | `taskId`/`taskName` |
-| [delete_bulk_tasks](docs/api-reference.md#task-management) | Remove multiple tasks | `tasks[]` with IDs or names |
 | [move_task](docs/api-reference.md#task-management) | Move task | `taskId`/`taskName`, `listId`/`listName` |
 | [move_bulk_tasks](docs/api-reference.md#task-management) | Move multiple tasks | `tasks[]` with IDs or names, target list |
 | [duplicate_task](docs/api-reference.md#task-management) | Copy task | `taskId`/`taskName`, `listId`/`listName` |
@@ -81,14 +71,11 @@ Or use this npx command:
 | [create_list_in_folder](docs/api-reference.md#list-management) | Create list in folder | `name`, `folderId`/`folderName` |
 | [get_folder](docs/api-reference.md#folder-management) | Get folder details | `folderId`/`folderName` |
 | [update_folder](docs/api-reference.md#folder-management) | Update folder properties | `folderId`/`folderName` |
-| [delete_folder](docs/api-reference.md#folder-management) | Delete folder | `folderId`/`folderName` |
 | [get_list](docs/api-reference.md#list-management) | Get list details | `listId`/`listName` |
 | [update_list](docs/api-reference.md#list-management) | Update list properties | `listId`/`listName` |
-| [delete_list](docs/api-reference.md#list-management) | Delete list | `listId`/`listName` |
 | [get_space_tags](docs/api-reference.md#tag-management) | Get space tags | `spaceId`/`spaceName` |
 | [create_space_tag](docs/api-reference.md#tag-management) | Create tag | `tagName`, `spaceId`/`spaceName` |
 | [update_space_tag](docs/api-reference.md#tag-management) | Update tag | `tagName`, `spaceId`/`spaceName` |
-| [delete_space_tag](docs/api-reference.md#tag-management) | Delete tag | `tagName`, `spaceId`/`spaceName` |
 | [add_tag_to_task](docs/api-reference.md#tag-management) | Add tag to task | `tagName`, `taskId`/(`taskName`+`listName`) |
 | [remove_tag_from_task](docs/api-reference.md#tag-management) | Remove tag from task | `tagName`, `taskId`/(`taskName`+`listName`) |
 
@@ -115,27 +102,6 @@ The server provides clear error messages for:
 
 The `LOG_LEVEL` environment variable can be specified to control the verbosity of server logs. Valid values are `trace`, `debug`, `info`, `warn`, and `error` (default).
 This can be also be specified on the command line as, e.g. `--env LOG_LEVEL=info`.
-
-## Support the Developer
-
-When using this server, you may occasionally see a small sponsor message with a link to this repository included in tool responses. I hope you can support the project!
-If you find this project useful, please consider supporting:
-
-[![Sponsor TaazKareem](https://img.shields.io/badge/Sponsor-TaazKareem-orange?logo=github)](https://github.com/sponsors/TaazKareem)
-
-
-<a href="https://buymeacoffee.com/taazkareem">
-  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="200" alt="Buy Me A Coffee">
-</a>
-
-
-## Acknowledgements
-
-Special thanks to [ClickUp](https://clickup.com) for their excellent API and services that make this integration possible.
-
-## Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ## License
 

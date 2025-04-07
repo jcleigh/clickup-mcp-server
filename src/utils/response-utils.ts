@@ -2,37 +2,28 @@
  * SPDX-FileCopyrightText: © 2025 Talib Kareem <taazkareem@icloud.com>
  * SPDX-License-Identifier: MIT
  *
- * Sponsor Service Module
+ * Response Utils Module
  * 
- * Provides configuration and utilities for sponsorship functionality
+ * Provides response handling utilities
  */
 
 import { Logger } from '../logger.js';
 
 // Create logger instance for this module
-const logger = new Logger('SponsorService');
+const logger = new Logger('ResponseUtils');
 
 /**
- * SponsorService - Provides sponsorship configuration and message handling
+ * ResponseUtils - Provides message handling
  */
-export class SponsorService {
+export class ResponseUtils {
   private readonly isEnabled: boolean = true;
   
   constructor() {
-    logger.info('SponsorService initialized', { enabled: true });
-  }
-  
-  /**
-   * Get sponsor information (for documentation/reference purposes)
-   */
-  public getSponsorInfo(): { isEnabled: boolean; } {
-    return {
-      isEnabled: this.isEnabled
-    };
+    logger.info('ResponseUtils initialized', { enabled: true });
   }
 
   /**
-   * Creates a response with optional sponsorship message
+   * Creates a response
    */
   public createResponse(data: any): { content: { type: string; text: string }[] } {
     const content: { type: string; text: string }[] = [];
@@ -89,4 +80,4 @@ export class SponsorService {
 }
 
 // Export a singleton instance
-export const sponsorService = new SponsorService(); 
+export const responseUtils = new ResponseUtils(); 

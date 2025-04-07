@@ -19,27 +19,22 @@ import {
   moveTaskTool,
   duplicateTaskTool,
   getTaskTool,
-  deleteTaskTool,
   getTaskCommentsTool,
   createTaskCommentTool,
   createBulkTasksTool,
   updateBulkTasksTool,
   moveBulkTasksTool,
-  deleteBulkTasksTool,
   attachTaskFileTool,
   getWorkspaceTasksTool,
   handleCreateTask,
   handleUpdateTask,
   handleMoveTask,
   handleDuplicateTask,
-  handleGetTasks,
-  handleDeleteTask,
   handleGetTaskComments,
   handleCreateTaskComment,
   handleCreateBulkTasks,
   handleUpdateBulkTasks,
   handleMoveBulkTasks,
-  handleDeleteBulkTasks,
   handleGetTask,
   handleAttachTaskFile,
   handleGetWorkspaceTasks
@@ -48,14 +43,12 @@ import {
   createListTool, handleCreateList,
   createListInFolderTool, handleCreateListInFolder,
   getListTool, handleGetList,
-  updateListTool, handleUpdateList,
-  deleteListTool, handleDeleteList
+  updateListTool, handleUpdateList
 } from "./tools/list.js";
 import {
   createFolderTool, handleCreateFolder,
   getFolderTool, handleGetFolder,
-  updateFolderTool, handleUpdateFolder,
-  deleteFolderTool, handleDeleteFolder
+  updateFolderTool, handleUpdateFolder
 } from "./tools/folder.js";
 import {
   getSpaceTagsTool, handleGetSpaceTags,
@@ -102,24 +95,20 @@ export function configureServer() {
         updateTaskTool,
         moveTaskTool,
         duplicateTaskTool,
-        deleteTaskTool,
         getTaskCommentsTool,
         createTaskCommentTool,
         attachTaskFileTool,
         createBulkTasksTool,
         updateBulkTasksTool,
         moveBulkTasksTool,
-        deleteBulkTasksTool,
         getWorkspaceTasksTool,
         createListTool,
         createListInFolderTool,
         getListTool,
         updateListTool,
-        deleteListTool,
         createFolderTool,
         getFolderTool,
         updateFolderTool,
-        deleteFolderTool,
         getSpaceTagsTool,
         addTagToTaskTool,
         removeTagFromTaskTool
@@ -162,8 +151,6 @@ export function configureServer() {
           return handleDuplicateTask(params);
         case "get_task":
           return handleGetTask(params);
-        case "delete_task":
-          return handleDeleteTask(params);
         case "get_task_comments":
           return handleGetTaskComments(params);
         case "create_task_comment":
@@ -176,8 +163,6 @@ export function configureServer() {
           return handleUpdateBulkTasks(params);
         case "move_bulk_tasks":
           return handleMoveBulkTasks(params);
-        case "delete_bulk_tasks":
-          return handleDeleteBulkTasks(params);
         case "get_workspace_tasks":
           return handleGetWorkspaceTasks(params);
         case "create_list":
@@ -188,16 +173,12 @@ export function configureServer() {
           return handleGetList(params);
         case "update_list":
           return handleUpdateList(params);
-        case "delete_list":
-          return handleDeleteList(params);
         case "create_folder":
           return handleCreateFolder(params);
         case "get_folder":
           return handleGetFolder(params);
         case "update_folder":
           return handleUpdateFolder(params);
-        case "delete_folder":
-          return handleDeleteFolder(params);
         case "get_space_tags":
           return handleGetSpaceTags(params);
         case "add_tag_to_task":

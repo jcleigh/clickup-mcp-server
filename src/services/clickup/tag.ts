@@ -5,7 +5,7 @@
  * ClickUp Tag Service
  * 
  * Provides access to ClickUp API endpoints for tag management:
- * - Space tags (get, create, update, delete)
+ * - Space tags (get, create, update)
  * - Task tags (add, remove)
  */
 
@@ -119,40 +119,6 @@ export class ClickUpTagService extends BaseClickUpService {
         success: false,
         error: {
           message: error.message || 'Failed to update space tag',
-          code: error.code,
-          details: error.data
-        }
-      };
-    }
-  }
-
-  /**
-   * Delete a tag from a space
-   * @param spaceId - ID of the space
-   * @param tagName - Name of the tag to delete
-   * @returns Promise with success status
-   */
-  async deleteSpaceTag(
-    spaceId: string,
-    tagName: string
-  ): Promise<ServiceResponse<void>> {
-    try {
-      this.logger.debug(`Deleting tag "${tagName}" from space: ${spaceId}`);
-      
-      // Encode the tag name in the URL
-      const encodedTagName = encodeURIComponent(tagName);
-      
-      await this.client.delete(`/space/${spaceId}/tag/${encodedTagName}`);
-      
-      return {
-        success: true
-      };
-    } catch (error) {
-      this.logger.error(`Failed to delete tag "${tagName}" from space: ${spaceId}`, error);
-      return {
-        success: false,
-        error: {
-          message: error.message || 'Failed to delete space tag',
           code: error.code,
           details: error.data
         }

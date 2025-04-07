@@ -8,13 +8,9 @@
  * updating, and deleting folders in the ClickUp workspace hierarchy.
  */
 
-import { 
-  CreateFolderData, 
-  ClickUpFolder
-} from '../services/clickup/types.js';
+import { CreateFolderData } from '../services/clickup/types.js';
 import { clickUpServices } from '../services/shared.js';
-import config from '../config.js';
-import { sponsorService } from '../utils/sponsor-service.js';
+import { responseUtils } from '../utils/response-utils.js';
 
 // Use shared services instance
 const { folder: folderService, workspace: workspaceService } = clickUpServices;
@@ -118,36 +114,6 @@ export const updateFolderTool = {
 };
 
 /**
- * Tool definition for deleting a folder
- */
-export const deleteFolderTool = {
-  name: "delete_folder",
-  description: `PERMANENTLY deletes folder and all contents. Use folderId (preferred/safest) or folderName + (spaceId/spaceName). WARNING: Cannot be undone, all lists/tasks deleted, folderName risky if not unique.`,
-  inputSchema: {
-    type: "object",
-    properties: {
-      folderId: {
-        type: "string",
-        description: "ID of folder to delete (preferred). Use this instead of folderName for safety."
-      },
-      folderName: {
-        type: "string",
-        description: "Name of folder to delete. When using this, you MUST also provide spaceId or spaceName."
-      },
-      spaceId: {
-        type: "string",
-        description: "ID of space containing the folder (required with folderName). Use this instead of spaceName if you have it."
-      },
-      spaceName: {
-        type: "string",
-        description: "Name of space containing the folder (required with folderName). Only use if you don't have spaceId."
-      }
-    },
-    required: []
-  }
-};
-
-/**
  * Handler for the create_folder tool
  * Creates a new folder in a space
  */
@@ -186,7 +152,7 @@ export async function handleCreateFolder(parameters: any) {
     // Create the folder
     const newFolder = await folderService.createFolder(targetSpaceId, folderData);
     
-    return sponsorService.createResponse({
+    return responseUtils.createResponse({
       id: newFolder.id,
       name: newFolder.name,
       space: {
@@ -196,7 +162,7 @@ export async function handleCreateFolder(parameters: any) {
       message: `Folder "${newFolder.name}" created successfully`
     });
   } catch (error: any) {
-    return sponsorService.createErrorResponse(`Failed to create folder: ${error.message}`);
+    return responseUtils.createErrorResponse(`Failed to create folder: ${error.message}`);
   }
 }
 
@@ -241,7 +207,7 @@ export async function handleGetFolder(parameters: any) {
     // Get the folder
     const folder = await folderService.getFolder(targetFolderId);
     
-    return sponsorService.createResponse({
+    return responseUtils.createResponse({
       id: folder.id,
       name: folder.name,
       space: {
@@ -250,7 +216,7 @@ export async function handleGetFolder(parameters: any) {
       }
     });
   } catch (error: any) {
-    return sponsorService.createErrorResponse(`Failed to retrieve folder: ${error.message}`);
+    return responseUtils.createErrorResponse(`Failed to retrieve folder: ${error.message}`);
   }
 }
 
@@ -305,7 +271,7 @@ export async function handleUpdateFolder(parameters: any) {
     // Update the folder
     const updatedFolder = await folderService.updateFolder(targetFolderId, updateData);
     
-    return sponsorService.createResponse({
+    return responseUtils.createResponse({
       id: updatedFolder.id,
       name: updatedFolder.name,
       space: {
@@ -315,60 +281,6 @@ export async function handleUpdateFolder(parameters: any) {
       message: `Folder "${updatedFolder.name}" updated successfully`
     });
   } catch (error: any) {
-    return sponsorService.createErrorResponse(`Failed to update folder: ${error.message}`);
+    return responseUtils.createErrorResponse(`Failed to update folder: ${error.message}`);
   }
 }
-
-/**
- * Handler for the delete_folder tool
- * Permanently removes a folder from the workspace
- */
-export async function handleDeleteFolder(parameters: any) {
-  const { folderId, folderName, spaceId, spaceName } = parameters;
-  
-  let targetFolderId = folderId;
-  
-  // If no folderId provided but folderName is, look up the folder ID
-  if (!targetFolderId && folderName) {
-    let targetSpaceId = spaceId;
-    
-    // If no spaceId provided but spaceName is, look up the space ID first
-    if (!targetSpaceId && spaceName) {
-      const spaceIdResult = await workspaceService.findSpaceByName(spaceName);
-      if (!spaceIdResult) {
-        throw new Error(`Space "${spaceName}" not found`);
-      }
-      targetSpaceId = spaceIdResult.id;
-    }
-    
-    if (!targetSpaceId) {
-      throw new Error("Either spaceId or spaceName must be provided when using folderName");
-    }
-    
-    const folderResult = await folderService.findFolderByName(targetSpaceId, folderName);
-    if (!folderResult) {
-      throw new Error(`Folder "${folderName}" not found in space`);
-    }
-    targetFolderId = folderResult.id;
-  }
-  
-  if (!targetFolderId) {
-    throw new Error("Either folderId or folderName must be provided");
-  }
-
-  try {
-    // Get folder details before deletion for confirmation message
-    const folder = await folderService.getFolder(targetFolderId);
-    const folderName = folder.name;
-    
-    // Delete the folder
-    await folderService.deleteFolder(targetFolderId);
-    
-    return sponsorService.createResponse({
-      success: true,
-      message: `Folder "${folderName || targetFolderId}" deleted successfully`
-    });
-  } catch (error: any) {
-    return sponsorService.createErrorResponse(`Failed to delete folder: ${error.message}`);
-  }
-} 

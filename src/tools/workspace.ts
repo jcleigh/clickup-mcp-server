@@ -11,7 +11,7 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { WorkspaceTree, WorkspaceNode } from '../services/clickup/types.js';
 import { Logger } from '../logger.js';
-import { sponsorService } from '../utils/sponsor-service.js';
+import { responseUtils } from '../utils/response-utils.js';
 import { clickUpServices } from '../services/shared.js';
 
 // Create a logger for workspace tools
@@ -43,10 +43,10 @@ export async function handleGetWorkspaceHierarchy() {
     // Generate tree representation
     const treeOutput = formatTreeOutput(hierarchy);
     
-    // Use sponsor service to create the response with optional sponsor message
-    return sponsorService.createResponse({ hierarchy: treeOutput });
+    // Use response util to create the response
+    return responseUtils.createResponse({ hierarchy: treeOutput });
   } catch (error: any) {
-    return sponsorService.createErrorResponse(`Error getting workspace hierarchy: ${error.message}`);
+    return responseUtils.createErrorResponse(`Error getting workspace hierarchy: ${error.message}`);
   }
 }
 

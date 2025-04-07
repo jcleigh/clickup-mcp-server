@@ -198,9 +198,9 @@ export function validateTaskUpdateData(updateData: any): void {
 /**
  * Validate bulk task array and task identification
  * @param tasks Array of tasks to validate
- * @param operation The bulk operation type ('create', 'update', 'move', 'delete')
+ * @param operation The bulk operation type ('create', 'update', 'move')
  */
-export function validateBulkTasks(tasks: any[], operation: 'create' | 'update' | 'move' | 'delete' = 'update') {
+export function validateBulkTasks(tasks: any[], operation: 'create' | 'update' | 'move' = 'update') {
   if (!Array.isArray(tasks) || tasks.length === 0) {
     throw new Error("tasks must be a non-empty array");
   }

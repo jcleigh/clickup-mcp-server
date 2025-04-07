@@ -775,28 +775,3 @@ export async function moveBulkTasksHandler(params: any) {
   // Move tasks
   return await bulkService.moveTasks(tasks, resolvedTargetListId, bulkOptions);
 }
-
-/**
- * Handler for deleting multiple tasks
- */
-export async function deleteBulkTasksHandler(params: any) {
-  const { tasks, options } = params;
-
-  // Validate tasks array
-  validateBulkTasks(tasks, 'delete');
-
-  // Parse bulk options
-  const bulkOptions = parseBulkOptions(options);
-
-  // Delete tasks
-  return await bulkService.deleteTasks(tasks, bulkOptions);
-}
-
-/**
- * Handler for deleting a task
- */
-export async function deleteTaskHandler(params) {
-  const taskId = await getTaskId(params.taskId, params.taskName, params.listName);
-  await taskService.deleteTask(taskId);
-  return true;
-} 

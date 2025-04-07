@@ -25,8 +25,6 @@ This document provides detailed information about all available tools, their par
 | create_bulk_tasks | Create multiple tasks | `tasks[]` | `listId` or `listName` |
 | update_task | Modify task properties | Either `taskId` or `taskName` | name, description, status, priority, dueDate, startDate |
 | update_bulk_tasks | Modify multiple tasks | `tasks[]` with task identifiers | Each task can have: name, description, status, priority, dueDate, startDate, etc. |
-| delete_task | Remove a task | `taskId` | `taskName`, `listName` |
-| delete_bulk_tasks | Remove multiple tasks | `tasks[]` with task identifiers | None |
 | move_task | Move task to another list | Either `taskId` or `taskName`, and either `listId` or `listName` | `sourceListName` |
 | move_bulk_tasks | Move multiple tasks | `tasks[]` with task identifiers, and target list | None |
 | duplicate_task | Copy task to another list | Either `taskId` or `taskName`, and either `listId` or `listName` | `sourceListName` |
@@ -591,30 +589,6 @@ Move all the completed tasks from "In Progress" list to "Done" list:
 }
 ```
 
-#### Bulk Deleting Tasks
-**User Prompt:**
-```
-Delete all these tasks from the "Archived" list:
-1. "Outdated feature"
-2. "Duplicate bug report"
-```
-
-**System Response:**
-```json
-{
-  "tasks": [
-    {
-      "taskName": "Outdated feature",
-      "listName": "Archived"
-    },
-    {
-      "taskName": "Duplicate bug report",
-      "listName": "Archived"
-    }
-  ]
-}
-```
-
 #### Attaching a File to a Task
 **User Prompt:**
 ```
@@ -746,7 +720,6 @@ These expressions can be used with both `dueDate` and `startDate` parameters.
 | create_list_in_folder | Create list in folder | `name` and either `folderId` or `folderName` | content, status |
 | get_list | Get list details | Either `listId` or `listName` | None |
 | update_list | Update list properties | Either `listId` or `listName` | name, content, status |
-| delete_list | Delete a list | Either `listId` or `listName` | None |
 
 ### List Parameters
 
@@ -790,7 +763,6 @@ Update the "Sprint Backlog" list to have the description "Current sprint plannin
 | create_folder | Create a new folder | `name` and either `spaceId` or `spaceName` | override_statuses |
 | get_folder | Get folder details | Either `folderId` or `folderName` | `spaceId` or `spaceName` (if using `folderName`) |
 | update_folder | Update folder properties | Either `folderId` or `folderName` | name, override_statuses, `spaceId` or `spaceName` (if using `folderName`) |
-| delete_folder | Delete a folder | Either `folderId` or `folderName` | `spaceId` or `spaceName` (if using `folderName`) |
 
 ### Folder Parameters
 
@@ -833,7 +805,6 @@ Update the "Development Projects" folder to be named "Active Development Project
 | get_space_tags | Get all tags in a space | Either `spaceId` or `spaceName` | None |
 | create_space_tag | Create a new tag | `tagName` and either `spaceId` or `spaceName` | `tagBg` (hex color), `tagFg` (hex color), `colorCommand` (natural language) |
 | update_space_tag | Update an existing tag | `tagName` and either `spaceId` or `spaceName` | `newTagName`, `tagBg`, `tagFg`, `colorCommand` (natural language) |
-| delete_space_tag | Delete a tag | `tagName` and either `spaceId` or `spaceName` | None |
 | add_tag_to_task | Add tag to a task | `tagName` and either `taskId` or (`taskName` + `listName`) | None |
 | remove_tag_from_task | Remove tag from task | `tagName` and either `taskId` or (`taskName` + `listName`) | None |
 

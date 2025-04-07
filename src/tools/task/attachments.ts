@@ -26,7 +26,7 @@ import {
   ChunkedUploadProgressResponse 
 } from './attachments.types.js';
 import { validateTaskIdentification } from './utilities.js';
-import { sponsorService } from '../../utils/sponsor-service.js';
+import { responseUtils } from '../../utils/response-utils.js';
 import { Logger } from '../../logger.js';
 
 // Use shared services instance
@@ -416,9 +416,9 @@ function createHandlerWrapper<T>(
   return async (parameters: any) => {
     try {
       const result = await handler(parameters);
-      return sponsorService.createResponse(formatResponse(result));
+      return responseUtils.createResponse(formatResponse(result));
     } catch (error) {
-      return sponsorService.createErrorResponse(error, parameters);
+      return responseUtils.createErrorResponse(error, parameters);
     }
   };
 }

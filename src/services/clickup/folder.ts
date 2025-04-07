@@ -12,8 +12,7 @@
  * - Finding folders by name
  */
 
-import { AxiosError } from 'axios';
-import { BaseClickUpService, ErrorCode, ClickUpServiceError, ServiceResponse } from './base.js';
+import { BaseClickUpService, ErrorCode, ClickUpServiceError } from './base.js';
 import { 
   ClickUpFolder,
   CreateFolderData
@@ -116,25 +115,6 @@ export class FolderService extends BaseClickUpService {
       return response.data;
     } catch (error) {
       throw this.handleError(error, `Failed to update folder ${folderId}`);
-    }
-  }
-
-  /**
-   * Delete a folder
-   * @param folderId The ID of the folder to delete
-   * @returns Success indicator
-   */
-  async deleteFolder(folderId: string): Promise<ServiceResponse<void>> {
-    try {
-      this.logOperation('deleteFolder', { folderId });
-      
-      await this.client.delete(`/folder/${folderId}`);
-      
-      return {
-        success: true
-      };
-    } catch (error) {
-      throw this.handleError(error, `Failed to delete folder ${folderId}`);
     }
   }
 

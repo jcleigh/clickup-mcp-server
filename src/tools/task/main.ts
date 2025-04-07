@@ -8,7 +8,7 @@
  * The actual implementations are organized in sub-modules for better maintainability.
  */
 
-import { sponsorService } from '../../utils/sponsor-service.js';
+import { responseUtils } from '../../utils/response-utils.js';
 
 // Import tool definitions
 import {
@@ -18,7 +18,6 @@ import {
   updateTaskTool,
   moveTaskTool,
   duplicateTaskTool,
-  deleteTaskTool,
   getTaskCommentsTool,
   createTaskCommentTool
 } from './single-operations.js';
@@ -27,7 +26,6 @@ import {
   createBulkTasksTool,
   updateBulkTasksTool,
   moveBulkTasksTool,
-  deleteBulkTasksTool
 } from './bulk-operations.js';
 
 import {
@@ -42,13 +40,11 @@ import {
   updateTaskHandler,
   moveTaskHandler,
   duplicateTaskHandler,
-  deleteTaskHandler,
   getTaskCommentsHandler,
   createTaskCommentHandler,
   createBulkTasksHandler,
   updateBulkTasksHandler,
   moveBulkTasksHandler,
-  deleteBulkTasksHandler,
   getWorkspaceTasksHandler,
   formatTaskData
 } from './index.js';
@@ -74,9 +70,9 @@ function createHandlerWrapper<T>(
   return async (parameters: any) => {
     try {
       const result = await handler(parameters);
-      return sponsorService.createResponse(formatResponse(result));
+      return responseUtils.createResponse(formatResponse(result));
     } catch (error) {
-      return sponsorService.createErrorResponse(error, parameters);
+      return responseUtils.createErrorResponse(error, parameters);
     }
   };
 }
@@ -98,18 +94,14 @@ export const handleGetTasks = createHandlerWrapper(getTasksHandler, (tasks) => (
 export async function handleUpdateTask(parameters: any) {
   try {
     const result = await updateTaskHandler(taskService, parameters);
-    return sponsorService.createResponse(formatTaskData(result));
+    return responseUtils.createResponse(formatTaskData(result));
   } catch (error) {
-    return sponsorService.createErrorResponse(error instanceof Error ? error.message : String(error));
+    return responseUtils.createErrorResponse(error instanceof Error ? error.message : String(error));
   }
 }
 
 export const handleMoveTask = createHandlerWrapper(moveTaskHandler);
 export const handleDuplicateTask = createHandlerWrapper(duplicateTaskHandler);
-export const handleDeleteTask = createHandlerWrapper(deleteTaskHandler, () => ({
-  success: true,
-  message: "Task deleted successfully"
-}));
 export const handleGetTaskComments = createHandlerWrapper(getTaskCommentsHandler, (comments) => ({
   comments,
   count: comments.length
@@ -146,15 +138,6 @@ export const handleUpdateBulkTasks = createHandlerWrapper(updateBulkTasksHandler
 }));
 
 export const handleMoveBulkTasks = createHandlerWrapper(moveBulkTasksHandler, (result: BatchResult<ClickUpTask>) => ({
-  successful: result.successful,
-  failed: result.failed,
-  count: result.totals.total,
-  success_count: result.totals.success,
-  failure_count: result.totals.failure,
-  errors: result.failed.map(f => f.error)
-}));
-
-export const handleDeleteBulkTasks = createHandlerWrapper(deleteBulkTasksHandler, (result: BatchResult<void>) => ({
   successful: result.successful,
   failed: result.failed,
   count: result.totals.total,
@@ -212,10 +195,6 @@ export const tools = [
     handler: createTaskCommentHandler
   },
   { 
-    definition: deleteTaskTool, 
-    handler: deleteTaskHandler
-  },
-  { 
     definition: getWorkspaceTasksTool, 
     handler: getWorkspaceTasksHandler
   },
@@ -251,20 +230,6 @@ export const tools = [
     definition: moveBulkTasksTool, 
     handler: async (params: any) => {
       const result = await moveBulkTasksHandler(params) as BatchResult<ClickUpTask>;
-      return {
-        successful: result.successful,
-        failed: result.failed,
-        count: result.totals.total,
-        success_count: result.totals.success,
-        failure_count: result.totals.failure,
-        errors: result.failed.map(f => f.error)
-      };
-    }
-  },
-  { 
-    definition: deleteBulkTasksTool, 
-    handler: async (params: any) => {
-      const result = await deleteBulkTasksHandler(params) as BatchResult<void>;
       return {
         successful: result.successful,
         failed: result.failed,

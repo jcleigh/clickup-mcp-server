@@ -12,11 +12,9 @@
  * - Finding lists by name
  */
 
-import { AxiosError } from 'axios';
 import { BaseClickUpService, ErrorCode, ClickUpServiceError, ServiceResponse } from './base.js';
 import { 
   ClickUpList,
-  ClickUpTask,
   CreateListData
 } from './types.js';
 import { WorkspaceService } from './workspace.js';
@@ -128,27 +126,6 @@ export class ListService extends BaseClickUpService {
       });
     } catch (error) {
       throw this.handleError(error, `Failed to update list ${listId}`);
-    }
-  }
-
-  /**
-   * Delete a list
-   * @param listId The ID of the list to delete
-   * @returns Success indicator
-   */
-  async deleteList(listId: string): Promise<ServiceResponse<void>> {
-    this.logOperation('deleteList', { listId });
-    
-    try {
-      await this.makeRequest(async () => {
-        await this.client.delete(`/list/${listId}`);
-      });
-      
-      return {
-        success: true
-      };
-    } catch (error) {
-      throw this.handleError(error, `Failed to delete list ${listId}`);
     }
   }
 
