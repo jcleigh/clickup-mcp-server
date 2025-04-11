@@ -1,6 +1,6 @@
 {
   "name": "@jcleigh/clickup-mcp-server",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "ClickUp MCP Server - Integrate ClickUp tasks with AI through Model Context Protocol",
   "type": "module",
   "main": "build/index.js",
@@ -11,8 +11,7 @@
     "build",
     "README.md",
     "LICENSE",
-    "Dockerfile",
-    "smithery.yaml"
+    "Dockerfile"
   ],
   "scripts": {
     "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
@@ -60,7 +59,7 @@
     "typescript": "^5.3.3"
   },
   "engines": {
-    "node": ">=18.0.0 <23.0.0"
+    "node": ">=18.0.0"
   },
   "publishConfig": {
     "access": "public"

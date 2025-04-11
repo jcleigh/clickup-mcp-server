@@ -7,38 +7,58 @@ A Model Context Protocol (MCP) server for integrating ClickUp tasks with AI appl
 1. Get your credentials:
    - ClickUp API key from [ClickUp Settings](https://app.clickup.com/settings/apps)
    - Team ID from your ClickUp workspace URL
-2. NPX installation (downloads to local path and installs dependencies)
+2. Set up the MCP Server using Docker
 3. Use natural language to manage your workspace!
 
-## NPX Installation
+## Running in VS Code
 
-[![NPM Version](https://img.shields.io/npm/v/@jcleigh/clickup-mcp-server.svg?style=flat&logo=npm)](https://www.npmjs.com/package/@jcleigh/clickup-mcp-server)
-[![Dependency Status](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen)](https://github.com/jcleigh/clickup-mcp-server/blob/main/package.json)
-[![NPM Downloads](https://img.shields.io/npm/dm/@jcleigh/clickup-mcp-server.svg?style=flat&logo=npm)](https://npmcharts.com/compare/@jcleigh/clickup-mcp-server?minimal=true)
+VS Code includes built-in MCP functionality that makes it easier to use the ClickUp MCP Server directly within your development environment:
 
-Add this entry to your client's MCP settings JSON file:
+1. Open VS Code and navigate to your settings.json file (Ctrl+Shift+P, then type "Preferences: Open User Settings (JSON)")
+2. Add the following configuration:
 
 ```json
-{
-  "mcpServers": {
-    "ClickUp": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@jcleigh/clickup-mcp-server@latest"
-      ],
-      "env": {
-        "CLICKUP_API_KEY": "your-api-key",
-        "CLICKUP_TEAM_ID": "your-team-id"
+"mcp": {
+    "inputs": [
+      {
+        "type": "promptString",
+        "id": "clickup_api_key",
+        "description": "ClickUp API Key",
+        "password": true
+      },
+      {
+        "type": "promptString",
+        "id": "clickup_team_id",
+        "description": "ClickUp Team ID",
+        "password": false
+      }
+    ],
+    "servers": {
+      "ClickUp": {
+        "command": "docker",
+        "args": [
+          "run",
+          "-i",
+          "--rm",
+          "-e",
+          "CLICKUP_API_KEY",
+          "-e",
+          "CLICKUP_TEAM_ID",
+          "jcleigh/clickup-mcp-server:latest"
+        ],
+        "env": {
+          "CLICKUP_API_KEY": "${input:clickup_api_key}",
+          "CLICKUP_TEAM_ID": "${input:clickup_team_id}"
+        }
       }
     }
-  }
-}
+  },
 ```
 
-Or use this npx command:
+3. Save the settings file
+4. In the Copilot Chat window, you can now interact with your ClickUp tasks directly by asking questions or giving commands about your tasks
 
-`npx -y @jcleigh/clickup-mcp-server@latest --env CLICKUP_API_KEY=your-api-key --env CLICKUP_TEAM_ID=your-team-id`
+The server will start automatically when you make ClickUp-related requests in Copilot Chat, and VS Code will handle the connection management in the background. See the [VS Code docs](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) for more info.
 
 ## Features
 
@@ -47,6 +67,8 @@ Or use this npx command:
 | • Create and update tasks<br>• Move and duplicate tasks anywhere<br>• Support for single and bulk operations<br>• Set start/due dates with natural language<br>• Create and manage subtasks<br>• Add comments and attachments | • Create and update space tags<br>• Add and remove tags from tasks<br>• Use natural language color commands<br>• Automatic contrasting foreground colors<br>• View all space tags<br>• Tag-based task organization across workspace |
 | 🌳 **Workspace Organization** | ⚡ **Integration Features** |
 | • Navigate spaces, folders, and lists<br>• Create and manage folders<br>• Organize lists within spaces<br>• Create lists in folders<br>• View workspace hierarchy<br>• Efficient path navigation | • Global name or ID-based lookups<br>• Case-insensitive matching<br>• Markdown formatting support<br>• Built-in rate limiting<br>• Error handling and validation<br>• Comprehensive API coverage |
+
+⚠️ Destructive tools like `delete task` or `bulk delete` have intentionally **NOT** been implemented.
 
 ## Available Tools
 
@@ -80,15 +102,6 @@ Or use this npx command:
 | [remove_tag_from_task](docs/api-reference.md#tag-management) | Remove tag from task | `tagName`, `taskId`/(`taskName`+`listName`) |
 
 See [full documentation](docs/api-reference.md) for optional parameters and advanced usage.
-
-## Prompts
-Not yet implemented and not supported by all client apps. Request a feature for a Prompt implementation that would be most beneficial for your workflow (without it being too specific). Examples:
-
-| Prompt | Purpose | Features |
-|--------|---------|----------|
-| [summarize_tasks](docs/api-reference.md#prompts) | Task overview | Status summary, priorities, relationships |
-| [analyze_priorities](docs/api-reference.md#prompts) | Priority optimization | Distribution analysis, sequencing |
-| [generate_description](docs/api-reference.md#prompts) | Task description creation | Objectives, criteria, dependencies |
 
 ## Error Handling
 
